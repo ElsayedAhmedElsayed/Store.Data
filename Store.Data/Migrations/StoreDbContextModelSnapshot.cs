@@ -40,31 +40,25 @@ namespace Store.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("PictureUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductBrandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductBrandId");
+                    b.HasIndex("BrandId");
 
-                    b.HasIndex("ProductTypeId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Products");
                 });
@@ -111,21 +105,21 @@ namespace Store.Data.Migrations
 
             modelBuilder.Entity("Store.Data.Enity.Product", b =>
                 {
-                    b.HasOne("Store.Data.Enity.ProductBrand", "ProductBrand")
+                    b.HasOne("Store.Data.Enity.ProductBrand", "Brand")
                         .WithMany()
-                        .HasForeignKey("ProductBrandId")
+                        .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Store.Data.Enity.ProductType", "ProductType")
+                    b.HasOne("Store.Data.Enity.ProductType", "Type")
                         .WithMany()
-                        .HasForeignKey("ProductTypeId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductBrand");
+                    b.Navigation("Brand");
 
-                    b.Navigation("ProductType");
+                    b.Navigation("Type");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Data.Enity
+namespace Store.Service.Services.Products.Dtos
 {
-    public class Product : BaseEntity<int>
+    public class ProductDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
@@ -15,11 +17,12 @@ namespace Store.Data.Enity
         public decimal Price { get; set; }
 
         public string PictureUrl { get; set; }
-        public ProductType Type { get; set; }
-        public int TypeId { get; set; }
-        public ProductBrand Brand { get; set; }
-        public int BrandId { get; set; }
 
+        public string BrandName { get; set; }
+
+        public string TypeName { get; set; }
+
+        public DateTime CreatedAt { get; set; }
 
     }
 }
