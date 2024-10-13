@@ -1,12 +1,15 @@
 
 using Microsoft.EntityFrameworkCore;
 using Store.Data.Context;
+using Store.Repository.Interfaces;
+using Store.Repository.UnitOfWork;
+using Store.Web.Helper;
 
 namespace Store.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task  Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,8 @@ namespace Store.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             builder.Services.AddDbContext<StoreDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -24,12 +29,15 @@ namespace Store.Web
 
             var app = builder.Build();
 
+            await ApplySeeding.ApplySeedingAsync(app);
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
