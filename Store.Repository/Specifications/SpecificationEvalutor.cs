@@ -19,6 +19,21 @@ namespace Store.Repository.Specifications
                 query = query.Where(Specs.Criteria);
             }
 
+            if(Specs.OrderBy is not null)
+            {
+                query = query.OrderBy(Specs.OrderBy);
+            }
+
+            if (Specs.OrderByDescending is not null)
+            {
+                query = query.OrderBy(Specs.OrderByDescending);
+            }
+
+            if(Specs.IsPaginated)
+            {
+                query = query.Skip(Specs.Skip).Take(Specs.Take);
+            }
+
             query = Specs.Includes.Aggregate(query, (Current, includeEx) => Current.Include(includeEx));
 
             return query;
