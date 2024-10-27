@@ -1,14 +1,17 @@
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using Store.Data.Context;
 using Store.Repository.Interfaces;
 using Store.Repository.UnitOfWork;
 using Store.Service.Services.HandelResponse;
 using Store.Service.Services.Products;
 using Store.Service.Services.Products.Dtos;
+using Store.Service.Services.CacheService;
 using Store.Web.Helper;
 using Store.Web.Middleware;
+using Store.Web.Extentions;
 
 namespace Store.Web
 {
@@ -25,6 +28,7 @@ namespace Store.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddAutoMapper(typeof(ProductProfile));
@@ -37,6 +41,19 @@ namespace Store.Web
             builder.Services.AddDbContext<StoreDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.AddDbContext<StoreIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+
+            builder.Services.AddApplicationService();
+            builder.Services.AddIdentityService();
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
+            {
+                var Configration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
+                return ConnectionMultiplexer.Connect(Configration);
             });
 
             var app = builder.Build();
